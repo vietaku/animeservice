@@ -5,3 +5,4 @@ whitenoise>=6.0,<7.0
 psycopg2>=2.0,<3.0
 djangorestframework==3.14.0
 django-tinymce==3.5.0
+whitenoise==6.4.0
