@@ -17,7 +17,8 @@ def trigger_error(request):
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('sentry-debug/', trigger_error),
-    path('admin/', admin.site.urls),
+    path('dich/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('tinymce/', include('tinymce.urls')),
 ]
