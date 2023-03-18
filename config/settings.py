@@ -42,8 +42,7 @@ else:
 # SECURITY WARNING: don't run with debug turned on in production!
 if not IS_HEROKU:
     DEBUG = True
-
-if not DEBUG:
+else:
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
 
