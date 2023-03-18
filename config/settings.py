@@ -214,7 +214,7 @@ class HerokuDiscoverRunner(DiscoverRunner):
 
 # Use HerokuDiscoverRunner on Heroku CI
 if "CI" in os.environ:
-    TEST_RUNNER = "animeservice.settings.HerokuDiscoverRunner"
+    TEST_RUNNER = "config.settings.HerokuDiscoverRunner"
 
 
 # Default primary key field type
