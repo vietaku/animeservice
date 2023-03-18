@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from api.models import Studio
+from animeservice.animes.models import Studio
 from rest_framework import serializers
 
 

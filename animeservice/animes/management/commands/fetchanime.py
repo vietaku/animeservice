@@ -1,15 +1,21 @@
 import pytz
 import requests
-from api.models import Anime, Studio, Tag
-from api.utils import AnimeSeason
+from animeservice.animes.models import Anime, Studio, Tag
+from animeservice.animes.utils import AnimeSeason
 from dateutil import parser
 from django.core.management.base import BaseCommand
-
+from datetime import datetime
 
 class Command(BaseCommand):
     help = "Closes the specified poll for voting"
 
     def handle(self, *args, **options):
+        if datetime.now().day != 14:
+            self.stdout.write(self.style.WARNING("Not fetching today"))
+            return
+        
+        self.stdout.write(self.style.WARNING("Fetching animes"))
+
         currentAnimeSeason = AnimeSeason()
         year = currentAnimeSeason.year
         season = currentAnimeSeason.season
@@ -35,11 +41,6 @@ class Command(BaseCommand):
 
         response = requests.get(url, headers=headers, params=payload)
         jsonResponse = response.json()
-
-        if jsonResponse["paging"]:
-            print("True")
-        else:
-            print("False")
 
         while True:
             for node in jsonResponse["data"]:

@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User, Group
-from api.models import Studio
+from animeservice.animes.models import Studio
 from rest_framework import viewsets
 from rest_framework import permissions
-from api.serializers import UserSerializer, GroupSerializer, StudioSerializer
+from animeservice.animes.serializers import UserSerializer, GroupSerializer, StudioSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):

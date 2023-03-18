@@ -15,25 +15,7 @@ import os
 from django.test.runner import DiscoverRunner
 from pathlib import Path
 
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 
-
-sentry_sdk.init(
-    dsn="https://9aa9241803f442d19272107d10bce410@o4504830292000768.ingest.sentry.io/4504830295408640",
-    integrations=[
-        DjangoIntegration(),
-    ],
-
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=1.0,
-
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True
-)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -61,19 +43,75 @@ else:
 if not IS_HEROKU:
     DEBUG = True
 
+if not DEBUG:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+
+    sentry_sdk.init(
+        dsn="https://9aa9241803f442d19272107d10bce410@o4504830292000768.ingest.sentry.io/4504830295408640",
+        integrations=[
+            DjangoIntegration(),
+        ],
+
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=1.0,
+
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True
+    )
+
 # Application definition
 
-INSTALLED_APPS = [
+# INSTALLED_APPS = [
+#     "django.contrib.admin",
+#     "django.contrib.auth",
+#     "django.contrib.contenttypes",
+#     "django.contrib.sessions",
+#     "django.contrib.messages",
+#     "django.contrib.staticfiles",
+#     "rest_framework",
+#     "api",
+#     "tinymce",
+# ]
+
+# Application definition
+
+DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rest_framework",
-    "api",
-    "tinymce",
+    # "django.contrib.humanize", # Handy template tags
+    # "django.contrib.sites",
+    # "django.forms",
 ]
+
+THIRD_PARTY_APPS = [
+    "rest_framework",
+    "tinymce",
+    # "crispy_forms",
+    # "crispy_bootstrap5",
+    # "allauth",
+    # "allauth.account",
+    # "allauth.socialaccount",
+    # "rest_framework.authtoken",
+    # "corsheaders",
+    # "drf_spectacular",
+]
+
+LOCAL_APPS = [
+    "animeservice.animes",
+    # Your stuff: custom apps go here
+]
+# https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -86,7 +124,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "animeservice.urls"
+ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
@@ -104,7 +142,7 @@ TEMPLATES = [
     }
 ]
 
-WSGI_APPLICATION = "animeservice.wsgi.application"
+WSGI_APPLICATION = "config.wsgi.application"
 
 
 # Database
@@ -176,7 +214,7 @@ class HerokuDiscoverRunner(DiscoverRunner):
 
 # Use HerokuDiscoverRunner on Heroku CI
 if "CI" in os.environ:
-    TEST_RUNNER = "animeservice.settings.HerokuDiscoverRunner"
+    TEST_RUNNER = "config.settings.HerokuDiscoverRunner"
 
 
 # Default primary key field type
