@@ -6,11 +6,19 @@ from dateutil import parser
 from django.core.management.base import BaseCommand
 from datetime import datetime
 
+# Fetch animes from MAL if it's the first day of the month
 class Command(BaseCommand):
     help = "Closes the specified poll for voting"
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '-f', '--force',
+            action='store_true',
+            help='Force to fetch animes regardless of the date',
+        )
+
     def handle(self, *args, **options):
-        if datetime.now().day != 14:
+        if datetime.now().day != 14 and not options['force']:
             self.stdout.write(self.style.WARNING("Not fetching today"))
             return
         
