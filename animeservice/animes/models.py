@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from tinymce.models import HTMLField
+from django.conf import settings
 
 class Studio(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -24,7 +25,16 @@ class Tag(models.Model):
         super(Tag, self).save(*args, **kwargs)
 
 class Anime(models.Model):
+    # Added Fields
     is_translated = models.BooleanField(default=False)
+    translated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True
+    )
+
+    # Fields from MAL
     mal_id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=200, blank=True)
     main_picture = models.JSONField(null=True, blank=True)
@@ -32,8 +42,6 @@ class Anime(models.Model):
     start_date = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField(null=True, blank=True)
     synopsis = HTMLField(null=True, blank=True)
-    translated_synopsis2 = HTMLField(null=True, blank=True)
-    translated_synopsis = models.TextField(null=True, blank=True)
     mean = models.FloatField(null=True, blank=True)
     rank = models.IntegerField(null=True, blank=True)
     popularity = models.IntegerField(null=True, blank=True)
@@ -48,6 +56,9 @@ class Anime(models.Model):
     studios = models.ManyToManyField(Studio, blank=True)
     nsfw = models.CharField(max_length=20, null=True, blank=True)
     rating = models.CharField(max_length=20, null=True, blank=True)
+    
+    class Meta:
+        ordering = ("rank", "popularity", "mean")
 
     def __str__(self):
         return self.title
