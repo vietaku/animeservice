@@ -22,7 +22,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING("Not fetching today"))
             return
         
-        self.stdout.write(self.style.WARNING("Fetching animes"))
+        self.stdout.write("Fetching animes")
 
         currentAnimeSeason = AnimeSeason()
         year = currentAnimeSeason.year
@@ -30,7 +30,6 @@ class Command(BaseCommand):
 
         url = f"https://api.myanimelist.net/v2/anime/season/{year}/{season}"
 
-        # self.stdout.write(self.style.SUCCESS(f'{url}'))
         headers = {
             "X-MAL-CLIENT-ID": "4a17101ff85b13ca8baaa4c6ede7d567",
         }
@@ -107,13 +106,13 @@ class Command(BaseCommand):
                     )
                     anime.tags.add(tag)
 
-                print(f"FINISHED PROCESSING {data['title']} ({anime_id})")
+                self.stdout.write((f"FINISHED PROCESSING {data['title']} ({anime_id})"))
 
             if "next" not in jsonResponse["paging"]:
                 break
 
             url = jsonResponse["paging"]["next"]
-            print("Fetching next page")
+            self.stdout.write("Fetching next page")
             response = requests.get(url, headers=headers)
             jsonResponse = response.json()
-        print("FINISHED FETCHING DATA, UPDATED TO DB AND FIREBASE")
+        self.stdout.write(self.style.SUCCESS("FINISHED FETCHING DATA, UPDATED TO DB"))

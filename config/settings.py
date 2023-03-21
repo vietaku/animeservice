@@ -80,6 +80,7 @@ if IS_HEROKU:
 #     "tinymce",
 # ]
 
+
 # Application definition
 
 DJANGO_APPS = [
