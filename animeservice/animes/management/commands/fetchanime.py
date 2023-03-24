@@ -6,6 +6,64 @@ from dateutil import parser
 from django.core.management.base import BaseCommand
 from datetime import datetime
 
+# update or create an Anime from dict
+def update_or_create_anime(data):
+    print(data["title"])
+    # Anime(**data).save()
+    # print(f"PROCESSING {data['title']}")
+    # print(f"DJANGO DATABASE: adding {data['title']} ({data['id']})")
+
+    data_studios = []
+    if "studios" in data:
+        data_studios = [s for s in data["studios"]]
+        data.pop("studios")
+
+    data_tags = []
+    if "genres" in data:
+        data_tags = [t for t in data["genres"]]
+        data.pop("genres")
+
+    anime_id = data["id"]
+    data.pop("id")
+
+    if "start_date" in data:
+        date_time = parser.parse(data.get("start_date"))
+        data["start_date"] = date_time.astimezone(
+            pytz.timezone("Australia/Sydney")
+        )
+
+    if "end_date" in data:
+        date_time = parser.parse(data.get("end_date"))
+        data["end_date"] = date_time.astimezone(
+            pytz.timezone("Australia/Sydney")
+        )
+
+    if (
+        Anime.objects.filter(pk=anime_id).exists()
+        and Anime.objects.get(pk=anime_id).is_translated
+    ):
+        anime, created = Anime.objects.get_or_create(
+            pk=anime_id, defaults={**data}
+        )
+    else:
+        anime, created = Anime.objects.update_or_create(
+            pk=anime_id, defaults={**data}
+        )
+
+    for s in data_studios:
+        studio, created = Studio.objects.get_or_create(
+            pk=s["id"], defaults={"name": s["name"]}
+        )
+        anime.studios.add(studio)
+
+    for t in data_tags:
+        tag, created = Tag.objects.get_or_create(
+            pk=t["id"], defaults={"name": t["name"]}
+        )
+        anime.tags.add(tag)
+
+    
+
 # Fetch animes from MAL if it's the first day of the month
 class Command(BaseCommand):
     help = "Closes the specified poll for voting"
@@ -15,6 +73,9 @@ class Command(BaseCommand):
             '-f', '--force',
             action='store_true',
             help='Force to fetch animes regardless of the date',
+        )
+        parser.add_argument(
+            '--id',
         )
 
     def handle(self, *args, **options):
@@ -52,61 +113,8 @@ class Command(BaseCommand):
         while True:
             for node in jsonResponse["data"]:
                 data = node["node"]
-                print(data["title"])
-                # Anime(**data).save()
-                # print(f"PROCESSING {data['title']}")
-                # print(f"DJANGO DATABASE: adding {data['title']} ({data['id']})")
-
-                data_studios = []
-                if "studios" in data:
-                    data_studios = [s for s in data["studios"]]
-                    data.pop("studios")
-
-                data_tags = []
-                if "genres" in data:
-                    data_tags = [t for t in data["genres"]]
-                    data.pop("genres")
-
-                anime_id = data["id"]
-                data.pop("id")
-
-                if "start_date" in data:
-                    date_time = parser.parse(data.get("start_date"))
-                    data["start_date"] = date_time.astimezone(
-                        pytz.timezone("Australia/Sydney")
-                    )
-
-                if "end_date" in data:
-                    date_time = parser.parse(data.get("end_date"))
-                    data["end_date"] = date_time.astimezone(
-                        pytz.timezone("Australia/Sydney")
-                    )
-
-                if (
-                    Anime.objects.filter(pk=anime_id).exists()
-                    and Anime.objects.get(pk=anime_id).is_translated
-                ):
-                    anime, created = Anime.objects.get_or_create(
-                        pk=anime_id, defaults={**data}
-                    )
-                else:
-                    anime, created = Anime.objects.update_or_create(
-                        pk=anime_id, defaults={**data}
-                    )
-
-                for s in data_studios:
-                    studio, created = Studio.objects.get_or_create(
-                        pk=s["id"], defaults={"name": s["name"]}
-                    )
-                    anime.studios.add(studio)
-
-                for t in data_tags:
-                    tag, created = Tag.objects.get_or_create(
-                        pk=t["id"], defaults={"name": t["name"]}
-                    )
-                    anime.tags.add(tag)
-
-                self.stdout.write((f"FINISHED PROCESSING {data['title']} ({anime_id})"))
+                update_or_create_anime(data)
+                self.stdout.write((f"FINISHED PROCESSING {data['title']}"))
 
             if "next" not in jsonResponse["paging"]:
                 break
@@ -116,3 +124,4 @@ class Command(BaseCommand):
             response = requests.get(url, headers=headers)
             jsonResponse = response.json()
         self.stdout.write(self.style.SUCCESS("FINISHED FETCHING DATA, UPDATED TO DB"))
+
