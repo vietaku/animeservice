@@ -1,9 +1,15 @@
 from animeservice.animes.models import Anime
 from django.core.management.base import BaseCommand
-from .firebase import *
 import requests
 from animeservice.animes.management.commands.fetchanime import update_or_create_anime
 from django.contrib.auth.models import User
+from config.settings import FIREBASE_CREDENTIAL
+import firebase_admin
+from firebase_admin import firestore, credentials
+
+cred = credentials.Certificate(FIREBASE_CREDENTIAL)
+app = firebase_admin.initialize_app(cred)
+db = firestore.client()
 
 # get all animes id from firebase
 def get_animes():
@@ -61,8 +67,7 @@ class Command(BaseCommand):
             self.stdout.write(f"Updating anime with id {id}")
             anime = Anime.objects.get(mal_id=id)
             anime.synopsis = animes[ids.index(id)]['translated_synopsis']
-            self.stdout.write(f"{anime.synopsis}")
             anime.is_translated = True
             anime.translated_by = User.objects.get(username='baotong')
             anime.save()
-            self.stdout.write(f"Finished updating anime with id {id}")
+            self.stdout.write(self.style.SUCCESS(f"Finished updating anime with id {id}"))

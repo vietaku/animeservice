@@ -70,15 +70,17 @@ if IS_HEROKU:
         environment="heroku",
     )
 
-FIREBASE_CONFIG = {
-    "API_KEY": os.environ["FIREBASE_API_KEY"],
-    "AUTH_DOMAIN": os.environ["FIREBASE_AUTH_DOMAIN"],
-    "DATABASE_URL": os.environ["FIREBASE_DATABASE_URL"],
-    "PROJECT_ID": os.environ["FIREBASE_PROJECT_ID"],
-    "STORAGE_BUCKET": os.environ["FIREBASE_STORAGE_BUCKET"],
-    "MESSAGING_SENDER_ID": os.environ["FIREBASE_MESSAGING_SENDER_ID"],
-    "APP_ID": os.environ["FIREBASE_APP_ID"],
-    "MEASUREMENT_ID": os.environ["FIREBASE_MEASUREMENT_ID"]
+FIREBASE_CREDENTIAL = {
+  "type": os.environ["FIREBASE_TYPE"],
+  "project_id": os.environ["FIREBASE_PROJECT_ID"],
+  "private_key_id": os.environ["FIREBASE_PRIVATE_KEY_ID"],
+  "private_key": os.environ["FIREBASE_PRIVATE_KEY"],
+  "client_email": os.environ["FIREBASE_CLIENT_EMAIL"],
+  "client_id": os.environ["FIREBASE_CLIENT_ID"],
+  "auth_uri": os.environ["FIREBASE_AUTH_URI"],
+  "token_uri": os.environ["FIREBASE_TOKEN_URI"],
+  "auth_provider_x509_cert_url": os.environ["FIREBASE_AUTH_PROVIDER_X509_CERT_URL"],
+  "client_x509_cert_url": os.environ["FIREBASE_CLIENT_X509_CERT_URL"]
 }
 
 # Application definition
