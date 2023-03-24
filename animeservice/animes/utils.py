@@ -6,7 +6,7 @@ class AnimeSeason:
         currentMonth = datetime.now().month
         MONTH_TO_SEASON = [
             "winter",
-            "winter",
+            "winter",  
             "winter",
             "spring",
             "spring",
@@ -23,3 +23,5 @@ class AnimeSeason:
     def __init__(self, season=None, year=None):
         self.season = season if season is not None else self.currentSeason()
         self.year = year if year is not None else datetime.now().year
+        if datetime.now().month == 12:
+            self.year += 1
