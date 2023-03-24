@@ -14,6 +14,10 @@ import dj_database_url
 import os
 from django.test.runner import DiscoverRunner
 from pathlib import Path
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -65,6 +69,17 @@ if IS_HEROKU:
 
         environment="heroku",
     )
+
+FIREBASE_CONFIG = {
+    "API_KEY": os.environ["FIREBASE_API_KEY"],
+    "AUTH_DOMAIN": os.environ["FIREBASE_AUTH_DOMAIN"],
+    "DATABASE_URL": os.environ["FIREBASE_DATABASE_URL"],
+    "PROJECT_ID": os.environ["FIREBASE_PROJECT_ID"],
+    "STORAGE_BUCKET": os.environ["FIREBASE_STORAGE_BUCKET"],
+    "MESSAGING_SENDER_ID": os.environ["FIREBASE_MESSAGING_SENDER_ID"],
+    "APP_ID": os.environ["FIREBASE_APP_ID"],
+    "MEASUREMENT_ID": os.environ["FIREBASE_MEASUREMENT_ID"]
+}
 
 # Application definition
 
