@@ -57,17 +57,18 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # get all animes from firebase
         animes, ids = get_animes()
+        self.stdout.write(f"Got all animes from FIREBASE")
 
         # loop through all animes and fetch details from MyAnimeList API
         for id in ids:
-            self.stdout.write(f"Fetching anime with id {id}")
+            self.stdout.write(f"Fetching MAL anime with id {id}")
             get_anime_details(id)
-            self.stdout.write(f"Finished fetching anime with id {id}")
+            self.stdout.write(f"Finished fetching MAL anime with id {id}")
 
-            self.stdout.write(f"Updating anime with id {id}")
+            self.stdout.write(f"Updating anime with id {id} to POSTGRESQL")
             anime = Anime.objects.get(mal_id=id)
             anime.synopsis = animes[ids.index(id)]['translated_synopsis']
             anime.is_translated = True
             anime.translated_by = User.objects.get(username='baotong')
             anime.save()
-            self.stdout.write(self.style.SUCCESS(f"Finished updating anime with id {id}"))
+            self.stdout.write(self.style.SUCCESS(f"Finished updating anime with id {id} to POSTGRESQL"))
