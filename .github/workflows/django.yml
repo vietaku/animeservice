@@ -21,6 +21,12 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Set up .env file
+      shell: bash
+      env:
+        FIREBASE_SECRET: ${{ secrets.FIREBASE_GITHUB_ENV }}
+      run: |
+        echo "$env:FIREBASE_SECRET" >> .env
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
