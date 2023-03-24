@@ -7,6 +7,7 @@ from django.views.generic import RedirectView
 admin.autodiscover()
 
 router = routers.DefaultRouter()
+router.register(r'animes', views.AnimeViewSet)
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register(r'studios', views.StudioViewSet)

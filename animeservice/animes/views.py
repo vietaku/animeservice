@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User, Group
-from animeservice.animes.models import Studio
+from animeservice.animes.models import Anime, Studio
 from rest_framework import viewsets
 from rest_framework import permissions
-from animeservice.animes.serializers import UserSerializer, GroupSerializer, StudioSerializer
+from animeservice.animes.serializers import AnimeSerializer, UserSerializer, GroupSerializer, StudioSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -29,3 +29,11 @@ class StudioViewSet(viewsets.ModelViewSet):
     queryset = Studio.objects.all()
     serializer_class = StudioSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+class AnimeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Anime.objects.all()
+    serializer_class = AnimeSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
