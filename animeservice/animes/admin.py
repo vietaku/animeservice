@@ -4,8 +4,11 @@ from django.contrib import admin
 from .models import *
 from django.db.models import JSONField 
 from django.forms import widgets
+from rest_framework.authtoken.admin import TokenAdmin
 
 logger = logging.getLogger(__name__)
+
+TokenAdmin.raw_id_fields = ['user']
 
 class PrettyJSONWidget(widgets.Textarea):
 
@@ -33,15 +36,6 @@ class AnimeAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'name_translated')
 
-# class AnimeQueryAdmin(admin.ModelAdmin):
-#     fieldsets = [
-#         ('Season information', {'fields': ['year', 'season']}),
-#         ('Query information', {'fields': ['sort', 'get_all_available_animes','limit','offset']}),
-#         ('Options', {'fields': ['get_all_fields', 'overide_value']}),
-#         ('Fields information', {'fields': ['title','main_picture','alternative_titles','start_date','end_date','synopsis','mean','rank','popularity','genres','media_type','status','num_episodes','start_season','broadcast','source','average_episode_duration','studios','nsfw','rating'], 'classes': ['collapse']}),
-#     ]
-
 admin.site.register(Anime, AnimeAdmin)
 admin.site.register(Studio)
 admin.site.register(Tag, TagAdmin)
-# admin.site.register(AnimeQuery, AnimeQueryAdmin)

@@ -83,20 +83,6 @@ FIREBASE_CREDENTIAL = {
   "client_x509_cert_url": os.environ["FIREBASE_CLIENT_X509_CERT_URL"]
 }
 
-# Application definition
-
-# INSTALLED_APPS = [
-#     "django.contrib.admin",
-#     "django.contrib.auth",
-#     "django.contrib.contenttypes",
-#     "django.contrib.sessions",
-#     "django.contrib.messages",
-#     "django.contrib.staticfiles",
-#     "rest_framework",
-#     "api",
-#     "tinymce",
-# ]
-
 
 # Application definition
 
@@ -114,13 +100,13 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "rest_framework.authtoken",
     "tinymce",
     # "crispy_forms",
     # "crispy_bootstrap5",
     # "allauth",
     # "allauth.account",
     # "allauth.socialaccount",
-    # "rest_framework.authtoken",
     # "corsheaders",
     # "drf_spectacular",
 ]
@@ -246,7 +232,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Rest Framework settings
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'animeservice.animes.authentication.BearerAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 # TinyMCE
