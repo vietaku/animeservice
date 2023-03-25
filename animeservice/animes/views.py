@@ -36,6 +36,7 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Anime.objects.all()
     serializer_class = AnimeSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 class SeasonalAnimeViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -43,6 +44,7 @@ class SeasonalAnimeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Anime.objects.all()
     serializer_class = AnimeSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         year = self.kwargs['year']
