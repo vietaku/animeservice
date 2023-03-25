@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User, Group
 from animeservice.animes.models import Anime, Studio
 from rest_framework import viewsets
-from rest_framework import permissions
 from animeservice.animes.serializers import AnimeSerializer, UserSerializer, GroupSerializer, StudioSerializer
 from rest_framework.response import Response
 
@@ -11,7 +10,6 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
@@ -20,7 +18,6 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 class StudioViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -28,7 +25,6 @@ class StudioViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Studio.objects.all()
     serializer_class = StudioSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -36,7 +32,6 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Anime.objects.all()
     serializer_class = AnimeSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 class SeasonalAnimeViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -44,7 +39,6 @@ class SeasonalAnimeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Anime.objects.all()
     serializer_class = AnimeSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         year = self.kwargs['year']
