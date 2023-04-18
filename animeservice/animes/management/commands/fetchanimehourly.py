@@ -65,16 +65,16 @@ class Command(BaseCommand):
             for node in jsonResponse["data"]:
                 data = node["node"]
                 update_or_create_anime(data)
-                self.stdout.write((f"FINISHED PROCESSING {data['title']}"))
 
+            
             if "next" not in jsonResponse["paging"]:
                 url_object.url = "done"
                 url_object.save()
+                self.stdout.write(self.style.SUCCESS("Reached the end of the list"))
                 break
 
             url_object.url = jsonResponse["paging"]["next"]
             url_object.save()
-
-            self.stdout.write("Fetching next page")
+            self.stdout.write(self.style.WARNING("Saved next url"))
 
         self.stdout.write(self.style.SUCCESS("FINISHED FETCHING DATA, UPDATED TO DB"))
