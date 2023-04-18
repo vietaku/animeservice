@@ -39,3 +39,4 @@ class TagAdmin(admin.ModelAdmin):
 admin.site.register(Anime, AnimeAdmin)
 admin.site.register(Studio)
 admin.site.register(Tag, TagAdmin)
+admin.site.register(Url)
