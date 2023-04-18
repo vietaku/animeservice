@@ -62,6 +62,11 @@ class Anime(models.Model):
 
     def __str__(self):
         return self.title
-
+    
     def save(self, update_firebase=True, *args, **kwargs):
         super(Anime, self).save(*args, **kwargs)
+
+class Url(models.Model):
+    id = models.IntegerField(primary_key=True)
+    # url text field
+    url = models.TextField(null=True, blank=True)
