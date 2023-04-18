@@ -58,7 +58,7 @@ class Command(BaseCommand):
         for i in range(100):
             url = url_object.url
             self.stdout.write(f"Fetching {url}")
-            break
+
             response = requests.get(url, headers=headers)
             jsonResponse = response.json()
 
