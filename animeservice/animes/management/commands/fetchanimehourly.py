@@ -55,7 +55,7 @@ class Command(BaseCommand):
             "X-MAL-CLIENT-ID": "4a17101ff85b13ca8baaa4c6ede7d567",
         }
 
-        for i in range(100):
+        for i in range(10):
             url = url_object.url
             self.stdout.write(f"Fetching {url}")
 
