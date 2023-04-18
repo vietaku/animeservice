@@ -31,7 +31,7 @@ class AnimeSeason:
 
 # update or create an Anime from dict
 def update_or_create_anime(data):
-    print(data["title"])
+    # print(data["title"])
     # Anime(**data).save()
     # print(f"PROCESSING {data['title']}")
     # print(f"DJANGO DATABASE: adding {data['title']} ({data['id']})")
