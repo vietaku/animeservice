@@ -78,6 +78,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for i in range(25):
-            fetch_anime()
+            fetch_anime(self)
 
         self.stdout.write(self.style.SUCCESS("FINISHED FETCHING DATA, UPDATED TO DB"))
