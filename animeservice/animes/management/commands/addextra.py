@@ -28,6 +28,8 @@ def get_anime_object_by_id(id):
 
 def get_next_anime_id(id):
     url_object = Anime.objects.filter(mal_id__gt=id).order_by('mal_id').first()
+    if url_object is None:
+        return None
     return url_object.mal_id
 
 def is_all_animes_fetched():
