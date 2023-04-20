@@ -56,7 +56,14 @@ class Anime(models.Model):
     studios = models.ManyToManyField(Studio, blank=True)
     nsfw = models.CharField(max_length=20, null=True, blank=True)
     rating = models.CharField(max_length=20, null=True, blank=True)
-    
+    pictures = models.JSONField(null=True, blank=True)
+    background = HTMLField(null=True, blank=True)
+    related_anime = models.JSONField(null=True, blank=True)
+    related_manga = models.JSONField(null=True, blank=True)
+    recommendations = models.JSONField(null=True, blank=True)
+    statistics = models.JSONField(null=True, blank=True)
+
+
     class Meta:
         ordering = ("rank", "popularity", "mean")
 
