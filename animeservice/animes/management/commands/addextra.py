@@ -34,46 +34,50 @@ def is_all_animes_fetched():
     url_object = get_current_url_object()
     return url_object.url == "done"
 
+def fetch_anime(process):
+    if is_all_animes_fetched():
+            process.stdout.write(process.style.WARNING("All animes fetched"))
+            return
+
+    process.stdout.write("Fetching animes")
+
+    url_object = get_current_url_object()
+    anime_object = get_anime_object_by_id(url_object.url)
+
+    headers = {
+        "X-MAL-CLIENT-ID": "4a17101ff85b13ca8baaa4c6ede7d567",
+    }
+
+    url = get_url(anime_object.mal_id)
+    process.stdout.write(f"Fetching {anime_object.title}")
+    response = requests.get(url, headers=headers)
+    data = response.json()
+
+    anime_object.pictures = data["pictures"]
+    anime_object.background = data["background"]
+    anime_object.related_anime = data["related_anime"]
+    anime_object.related_manga = data["related_manga"]
+    anime_object.recommendations = data["recommendations"]
+    anime_object.statistics = data["statistics"]
+    anime_object.save()
+
+    next_id = get_next_anime_id(anime_object.mal_id)
+
+    if next_id is None:
+        url_object.url = "done"
+        url_object.save()
+        process.stdout.write(process.style.SUCCESS("Reached the end of the list"))
+    else:
+        url_object.url = next_id
+        url_object.save()
+        process.stdout.write(process.style.WARNING("Saved next url"))
+
 # Fetch animes from MAL if it's the first day of the month
 class Command(BaseCommand):
     help = "Closes the specified poll for voting"
 
     def handle(self, *args, **options):
-        if is_all_animes_fetched():
-            self.stdout.write(self.style.WARNING("All animes fetched"))
-            return
-
-        self.stdout.write("Fetching animes")
-
-        url_object = get_current_url_object()
-        anime_object = get_anime_object_by_id(url_object.url)
-
-        headers = {
-            "X-MAL-CLIENT-ID": "4a17101ff85b13ca8baaa4c6ede7d567",
-        }
-
-        url = get_url(anime_object.mal_id)
-        self.stdout.write(f"Fetching {anime_object.title}")
-        response = requests.get(url, headers=headers)
-        data = response.json()
-
-        anime_object.pictures = data["pictures"]
-        anime_object.background = data["background"]
-        anime_object.related_anime = data["related_anime"]
-        anime_object.related_manga = data["related_manga"]
-        anime_object.recommendations = data["recommendations"]
-        anime_object.statistics = data["statistics"]
-        anime_object.save()
-
-        next_id = get_next_anime_id(anime_object.mal_id)
-
-        if next_id is None:
-            url_object.url = "done"
-            url_object.save()
-            self.stdout.write(self.style.SUCCESS("Reached the end of the list"))
-        else:
-            url_object.url = next_id
-            url_object.save()
-            self.stdout.write(self.style.WARNING("Saved next url"))
+        for i in range(25):
+            fetch_anime()
 
         self.stdout.write(self.style.SUCCESS("FINISHED FETCHING DATA, UPDATED TO DB"))
