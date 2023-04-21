@@ -36,7 +36,11 @@ class AnimeAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'name_translated')
 
+class MangaAdmin(admin.ModelAdmin):
+    list_display = ('id')
+
 admin.site.register(Anime, AnimeAdmin)
 admin.site.register(Studio)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Url)
+admin.site.register(Manga)
