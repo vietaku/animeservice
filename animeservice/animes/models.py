@@ -77,3 +77,7 @@ class Url(models.Model):
     id = models.IntegerField(primary_key=True)
     # url text field
     url = models.TextField(null=True, blank=True)
+
+class Manga(models.Model):
+    id = models.IntegerField(primary_key=True)
+    mal_data = models.JSONField(null=True, blank=True)
