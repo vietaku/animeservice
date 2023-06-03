@@ -2,9 +2,9 @@ from django.contrib.auth.models import User, Group
 from animeservice.animes.models import Anime, Studio
 from rest_framework import viewsets
 from animeservice.animes.serializers import AnimeSerializer, UserSerializer, GroupSerializer, StudioSerializer
-from rest_framework.response import Response
 import csv
 from django.http import HttpResponse
+from django.db.models.functions import TruncDate
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -64,9 +64,9 @@ def export_animes(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="animes.csv"'
     writer = csv.writer(response)
-    writer.writerow(['id', 'title', 'average_episode_duration', 'end_date', 'mean', 'media_type', 'nsfw', 'num_episodes', 'popularity', 'rank', 'rating', 'source', 'start_date', 'status', 'studios', 'tags'])
+    writer.writerow(['id', 'title', 'average_episode_duration', 'mean', 'media_type', 'nsfw', 'num_episodes', 'popularity', 'rank', 'rating', 'source', 'start_date', 'status', 'studios', 'tags'])
 
-    for anime in Anime.objects.all().values_list('mal_id', 'title', 'average_episode_duration', 'end_date', 'mean', 'media_type', 'nsfw', 'num_episodes', 'popularity', 'rank', 'rating', 'source', 'start_date', 'status', 'studios', 'tags'):
+    for anime in Anime.objects.annotate(start_date_trunced=TruncDate('start_date')).all().values_list('mal_id', 'title', 'average_episode_duration', 'mean', 'media_type', 'nsfw', 'num_episodes', 'popularity', 'rank', 'rating', 'source', 'start_date_trunced', 'status', 'studios__name', 'tags__name'):
         writer.writerow(anime)
 
     return response
